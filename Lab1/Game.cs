@@ -5,21 +5,21 @@ public class Game
     private GameAccount Player { get; }
     public GameAccount Opponent { get; }
     public int Rating { get; }
-    private Random winOrLose = new Random();
-    private static int StartID = 1234567890;
-    public int ID = StartID;
+    private readonly Random _winOrLose = new();
+    private static int _startId = 1234567890;
+    public readonly int Id;
     
     public Game(GameAccount player, GameAccount opponent, int rating)
     {
         Player = player;
         Opponent = opponent;
         Rating = rating;
-        ID = StartID;
+        Id = _startId;
     }
 
     public void Play()
     {
-        int resultRandom = winOrLose.Next(0, 2);
+        var resultRandom = _winOrLose.Next(0, 2);
         if (resultRandom == 0)
         {
             Player.WinGame(Opponent, Rating);
@@ -28,6 +28,6 @@ public class Game
         {
             Player.LoseGame(Opponent, Rating);
         }
-        StartID++;
+        _startId++;
     }
 }

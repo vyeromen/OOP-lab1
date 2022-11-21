@@ -7,8 +7,8 @@ public class GameAccount
     {
         get
         {
-            int rating = 1;
-            foreach(Game game in GamesList)
+            var rating = 1;
+            foreach(var game in _gamesList)
             {
                 if (game.Rating < 0 && rating <= -(game.Rating))
                     rating = 1;
@@ -18,9 +18,7 @@ public class GameAccount
         }
     }
 
-    private int GamesCount => GamesList.Count;
-
-    private List<Game> GamesList = new List<Game>();
+    private readonly List<Game> _gamesList = new();
 
     public GameAccount(string name)
     {
@@ -34,11 +32,11 @@ public class GameAccount
             throw new ArgumentOutOfRangeException("Rating must be positive");
         }
 
-        Game game = new Game(this, opponent, rating);
-        GamesList.Add(game);
+        var game = new Game(this, opponent, rating);
+        _gamesList.Add(game);
         
         game = new Game(opponent, this, -rating);
-        opponent.GamesList.Add(game);
+        opponent._gamesList.Add(game);
     }
     
     public void LoseGame(GameAccount opponent, int rating)
@@ -48,11 +46,11 @@ public class GameAccount
             throw new ArgumentOutOfRangeException("Rating must be positive");
         }
         
-        Game game = new Game(this, opponent, -rating);
-        GamesList.Add(game);
+        var game = new Game(this, opponent, -rating);
+        _gamesList.Add(game);
         
         game = new Game(opponent,this, rating);
-        opponent.GamesList.Add(game);
+        opponent._gamesList.Add(game);
     }
 
     public string GetStats()
@@ -64,13 +62,13 @@ public class GameAccount
         report.AppendLine("       ID             Player          Opponent          Rating    ");
         report.AppendLine("---------------------------------------------------------------------------");
         
-        foreach (Game game in GamesList)
+        foreach (var game in _gamesList)
         {
-            report.AppendLine($"{game.ID, 13}  {UserName, 12}  {game.Opponent.UserName, 15}  {game.Rating, 14}");
+            report.AppendLine($"{game.Id, 13}  {UserName, 12}  {game.Opponent.UserName, 15}  {game.Rating, 14}");
             report.AppendLine("---------------------------------------------------------------------------");
         }
         
-        report.AppendLine($"Total Games Played: {GamesCount}");
+        report.AppendLine($"Total Games Played: {_gamesList.Count}");
         report.AppendLine($"Final Rating: {CurrentRating}");
         return report.ToString();
     }
